@@ -1,0 +1,23 @@
+{
+  "name": "handy-gui-desktop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rtcoder/handy-gui-desktop.git"
+  },
+  "author": "rtcoder",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rtcoder/handy-gui-desktop/issues"
+  },
+  "homepage": "https://github.com/rtcoder/handy-gui-desktop#readme",
+  "devDependencies": {
+    "electron": "^22.0.0"
+  }
+}
