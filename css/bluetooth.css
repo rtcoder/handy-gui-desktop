@@ -1,0 +1,93 @@
+.bluetooth {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bluetooth .sync,
+.bluetooth .graph .pc,
+.bluetooth .graph .bt,
+.bluetooth .graph .board {
+    font-size: 24px;
+}
+
+.bluetooth .graph {
+    margin-top: 40px;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.bluetooth .graph .line {
+    height: 2px;
+    width: 100px;
+    background: #ccc;
+}
+
+.bluetooth .graph .line.blue,
+.bluetooth.connected .graph .line {
+    background: #09c;
+}
+
+.bluetooth .graph .pc,
+.bluetooth.connected .graph .bt,
+.bluetooth.connected .graph .board {
+    color: #09b;
+}
+
+.bluetooth.connecting .graph .bt {
+    color: #fff;
+    animation-name: pulse;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes pulse {
+    0% {
+        color: #fff;
+    }
+    50% {
+        color: #4285f4;
+    }
+    100% {
+        color: #fff;
+    }
+}
+
+.bluetooth.connecting .sync {
+    -webkit-animation: spin 2s linear infinite;
+    -moz-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+@-moz-keyframes spin {
+    0% {
+        -moz-transform: rotate(360deg);
+    }
+    100% {
+        -moz-transform: rotate(0deg);
+    }
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(360deg);
+    }
+    100% {
+        -webkit-transform: rotate(0deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+    100% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+}

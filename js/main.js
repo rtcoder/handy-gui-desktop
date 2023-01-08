@@ -1,45 +1,50 @@
-const {app, BrowserWindow, ipcMain} = require('electron')
-const path = require('path')
+const {app, BrowserWindow, ipcMain} = require('electron');
+const path = require('path');
 
-function createWindow () {
+function createWindow() {
     const mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
+        backgroundColor: '#2f2d2d',
         webPreferences: {
             preload: path.join(__dirname, 'preload.js')
         }
-    })
+    });
+    mainWindow.webContents.openDevTools();
 
     mainWindow.webContents.on('select-bluetooth-device', (event, deviceList, callback) => {
-        event.preventDefault()
+        event.preventDefault();
         if (deviceList && deviceList.length > 0) {
-            callback(deviceList[0].deviceId)
+            callback(deviceList[0].deviceId);
         }
-    })
+    });
 
     // Listen for a message from the renderer to get the response for the Bluetooth pairing.
     ipcMain.on('bluetooth-pairing-response', (event, response) => {
-        bluetoothPinCallback(response)
-    })
+        bluetoothPinCallback(response);
+    });
 
     mainWindow.webContents.session.setBluetoothPairingHandler((details, callback) => {
 
-        bluetoothPinCallback = callback
+        bluetoothPinCallback = callback;
         // Send a message to the renderer to prompt the user to confirm the pairing.
-        mainWindow.webContents.send('bluetooth-pairing-request', details)
-    })
+        mainWindow.webContents.send('bluetooth-pairing-request', details);
+    });
 
     mainWindow.loadFile('index.html')
+        .finally(_ => {
+            console.log('dd');
+        });
 }
 
 app.whenReady().then(() => {
-    createWindow()
+    createWindow();
 
     app.on('activate', function () {
-        if (BrowserWindow.getAllWindows().length === 0) createWindow()
-    })
-})
+        if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    });
+});
 
 app.on('window-all-closed', function () {
-    if (process.platform !== 'darwin') app.quit()
-})
+    if (process.platform !== 'darwin') app.quit();
+});

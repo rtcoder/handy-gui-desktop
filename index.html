@@ -3,15 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <title>Web Bluetooth API</title>
+    <title>Handy</title>
+    <link rel="stylesheet" href="css/roboto.css">
+    <link rel="stylesheet" href="css/material-design-icons.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/web-components/mat-icon.js"></script>
 </head>
 <body>
-<h1>Web Bluetooth API</h1>
+<div class="loading">
+ładowane
+</div>
+<nav>
+    <ul>
+        <li data-id="dashboard">
+            <mat-icon>dashboard</mat-icon>
+        </li>
+        <li data-id="bluetooth">
+            <mat-icon>bluetooth</mat-icon>
+        </li>
+        <li>
+            <mat-icon>brush</mat-icon>
+        </li>
+        <li>
+            <mat-icon>sports_esports</mat-icon>
+        </li>
+    </ul>
+</nav>
 
-<button id="clickme">Test Bluetooth</button>
-
-<p>Currently selected bluetooth device: <strong id="device-name"></strong></p>
-
-<script src="./renderer.js"></script>
+<div class="container">
+    <section class="dashboard"></section>
+    <section class="bluetooth"></section>
+</div>
+<script type="module" src="js/app.js"></script>
+<script type="module" src="js/renderer.js"></script>
 </body>
 </html>
