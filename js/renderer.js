@@ -5,8 +5,16 @@ function q(selector) {
     return document.querySelector(selector);
 }
 
+function qAll(selector) {
+    return document.querySelectorAll(selector);
+}
+
 function hide(selector) {
     q(selector).setAttribute('hidden', 'true');
+}
+
+function hideAll(selector) {
+    qAll(selector).forEach(el => el.setAttribute('hidden', 'true'));
 }
 
 function show(selector) {
@@ -37,11 +45,12 @@ const promiseTimeout = function (ms, promise) {
 async function loadPages() {
     const loadScreen = q('.loading');
     const names = [
-        'bluetooth'
+        'dashboard',
+        'bluetooth',
+        'painting'
     ];
     for (const name of names) {
         const page = await loadHTML(`pages/${name}.html`);
-        console.log(page);
         q(`.container .${name}`).innerHTML = page;
         setTimeout(() => {
         }, 3000);
@@ -51,12 +60,34 @@ async function loadPages() {
 
 await loadPages();
 
-async function connectBoard() {
+function setBtStatusClass(status) {
     q('.bluetooth').classList.remove(
-        'disconnected', 'canceled', 'connected', 'failed');
-    q('.bluetooth').classList.add('connecting');
+        'disconnected', 'canceled', 'connected', 'failed', 'connecting');
+    q('.bluetooth').classList.add(status);
+}
+
+function btCharacteristicValueChanged(event) {
+    const val = event.target.value.getUint8(0);
+}
+
+function onDisconnectBoard() {
+
+    app.bluetooth.connectedDevice.device = null;
+    app.bluetooth.connectedDevice.service = null;
+    app.bluetooth.connectedDevice.characteristic = null;
+
+    app.bluetooth.connectionStatus = CONNECTION_STATUSES.DISCONNECTED;
+
+    setBtStatusClass('disconnected');
+}
+
+async function connectBoard() {
+    setBtStatusClass('connecting');
+
     app.bluetooth.connectionStatus = CONNECTION_STATUSES.PENDING;
+
     let device;
+
     try {
         app.bluetooth.connectedDevice.device = null;
         app.bluetooth.connectedDevice.service = null;
@@ -78,23 +109,26 @@ async function connectBoard() {
             app.bluetooth.connectionStatus = CONNECTION_STATUSES.CONNECTED;
             app.bluetooth.connectedDevice.device = connectedDevice;
 
-            q('.bluetooth').classList.add('connected');
-            q('.bluetooth').classList.remove('connecting');
+            device.addEventListener('gattserverdisconnected', onDisconnectBoard);
+
+            setBtStatusClass('connected');
 
             const service = await connectedDevice.getPrimaryService(SERVICE_ID);
             const characteristic = await service.getCharacteristic(CHARACTERISTIC_ID);
-        } else {
-            console.log('no');
+
+            app.bluetooth.connectedDevice.service = service;
+            app.bluetooth.connectedDevice.characteristic = characteristic;
+
+            characteristic.addEventListener('characteristicvaluechanged', btCharacteristicValueChanged);
         }
     } catch (e) {
         console.log({e});
-        q('.bluetooth').classList.remove('connecting');
         if (typeof device !== 'undefined') {
             app.bluetooth.connectionStatus = CONNECTION_STATUSES.FAILED;
-            q('.bluetooth').classList.add('failed');
+            setBtStatusClass('failed');
         } else {
             app.bluetooth.connectionStatus = CONNECTION_STATUSES.CANCELLED;
-            q('.bluetooth').classList.add('cancelled');
+            setBtStatusClass('cancelled');
         }
     }
     console.log(app);
@@ -102,6 +136,23 @@ async function connectBoard() {
 
 q('.sync').addEventListener('click', connectBoard);
 
+function onMenuItemClick(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    const target = event.target.tagName.toLowerCase() === 'li'
+        ? event.target
+        : event.target.closest('li');
+
+    const id = target.dataset.id;
+
+    hideAll('.container section');
+    show(`.container section.${id}`);
+
+    qAll('nav li').forEach(el => el.classList.remove('active'));
+    q(`nav li[data-id="${id}"]`).classList.add('active');
+}
+
+qAll('nav li').forEach(el => el.addEventListener('click', onMenuItemClick));
 window.electronAPI.bluetoothPairingRequest((event, details) => {
     const response = {};
 

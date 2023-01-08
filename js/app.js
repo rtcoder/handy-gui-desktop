@@ -6,6 +6,7 @@ window.CONNECTION_STATUSES = {
     PENDING: 4,
 };
 window.app = {
+    version: '0.1',
     bluetooth: {
         connectionStatus: CONNECTION_STATUSES.DISCONNECTED,
         connectedDevice: {
