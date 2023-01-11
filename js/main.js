@@ -7,7 +7,7 @@ function createWindow() {
         height: 600,
         backgroundColor: '#2f2d2d',
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js')
+            preload: path.join(__dirname, 'preload.js'),
         }
     });
     mainWindow.webContents.openDevTools();

@@ -2,6 +2,10 @@
 nav {
     width: 50px;
     border-right: 1px solid #464646;
+    position: sticky;
+    top: 0;
+    left: 0;
+    height: 100vh;
 }
 
 nav li {

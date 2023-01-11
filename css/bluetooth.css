@@ -1,4 +1,4 @@
-.bluetooth {
+.bluetooth, .bluetooth .content {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -8,7 +8,8 @@
 .bluetooth .graph .pc,
 .bluetooth .graph .bt,
 .bluetooth .graph .board {
-    font-size: 24px;
+    font-size: 45px;
+    cursor: pointer;
 }
 
 .bluetooth .graph {
